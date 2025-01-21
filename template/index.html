@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Docker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial;
+            /*background-color: #f1f1f1;*/
+            padding: 20px;
+        }
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the as inside the tab */
+        .tab a {
+            /* float: left;
+             background-color: inherit;
+             border: none;
+             outline: none;
+             cursor: pointer;
+             padding: 14px 16px;
+             transition: 0.3s;
+             font-size: 17px;*/
+            float: left;
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            border-bottom: 3px solid transparent;
+        }
+
+        /* Change background color of as on hover */
+        .tab a:hover {
+            background-color: #ddd;
+            /*border-bottom: 3px solid #0040ff;*/
+        }
+
+        /* Create an active/current tablink class  #00a6ff */
+        .tab a.active {
+            /*  background-color: #00a6ff;*/
+            color: #0040ff;
+            border-bottom: 3px solid #0040ff;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            /*padding: 6px 12px;*/
+            /*border: 10px solid red;*/
+            border-top: none;
+        }
+
+        .tabcontent.active { /* add this */
+            display: block;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+
+<h2>Docker v.{{.Version}}</h2>
+
+
+<div class="tab">
+    <a class="tablinks active" onclick="openCity(event, 'Image')">Image</a>
+    <a class="tablinks" onclick="openCity(event, 'Container')">Container</a>
+<!--    <a class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</a>-->
+</div>
+<br>
+
+<div id="Image" class="tabcontent active">
+<!--    <h3></h3>-->
+    <table id="customers">
+        <tr>
+            <th>Repository</th>
+            <th>Tag</th>
+            <th>Image ID</th>
+            <th>Created</th>
+            <th>Size</th>
+            <th style="width: 100px"></th>
+        </tr>
+        {{range $index, $img := .Images}}
+        <!--        {{$index}}. {{$img}},-->
+        <tr>
+            <td>{{$img.RepositoryID}}</td>
+            <td>{{$img.Tag}}</td>
+            <td>{{$img.ImageID}}</td>
+            <td>{{$img.Created}}</td>
+            <td>{{$img.Size}}</td>
+            <td><a>hapus</a></td>
+        </tr>
+        {{end}}
+<!--        <tr>-->
+<!--            <td>Alfreds Futterkiste</td>-->
+<!--            <td>Maria Anders</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td><a>hapus</a></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>Berglunds snabbköp</td>-->
+<!--            <td>Christina Berglund</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td><a>hapus</a></td>-->
+<!--        </tr>-->
+    </table>
+    <br>
+</div>
+
+<div id="Container" class="tabcontent">
+<!--    <h3></h3>-->
+    <table id="customers">
+        <tr>
+            <th>Container ID</th>
+            <th>Image</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Port</th>
+            <th>Name</th>
+            <th  style="width: 100px"></th>
+        </tr>
+        {{range $indexC, $cntrs := .Containers}}
+        <tr>
+            <td>{{$cntrs.ContainerID}}</td>
+            <td>{{$cntrs.Image}}</td>
+            <td>{{$cntrs.Status}}</td>
+            <td>{{$cntrs.Created}}</td>
+            <td>{{$cntrs.Port}}</td>
+            <td>{{$cntrs.Name}}</td>
+            <td>
+                {{if eq $cntrs.State "running"}}
+                <a href="/container/stop/{{$cntrs.ContainerID}}" >Stop</a>
+                {{else}}
+                <a href="/container/start/{{$cntrs.ContainerID}}" >Start</a>
+                {{end}}
+            </td>
+        </tr>
+        {{end}}
+<!--        <tr>-->
+<!--            <td>Alfreds Futterkiste</td>-->
+<!--            <td>Maria Anders</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td>Germany</td>-->
+<!--            <td><a>hapus</a></td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>Berglunds snabbköp</td>-->
+<!--            <td>Christina Berglund</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td>Sweden</td>-->
+<!--            <td><a>hapus</a></td>-->
+        </tr>
+    </table>
+</div>
+
+<div id="Tokyo" class="tabcontent">
+    <h3>Tokyo</h3>
+    <p>Tokyo is the capital of Japan.</p>
+</div>
+
+
+<script>
+
+    function myAlarm() {
+        alert("Hello! I am an alert box!");
+    }
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</body>
+</html>
