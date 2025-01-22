@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Docker</title>
+</head>
+<body onload="myAlert('{{.}}')">
+<script>
+    function myAlert(message) {
+        if (confirm(message)) {
+            // Redirect to the desired URL after pressing OK
+            location.replace("http://localhost:5000/#Container");
+        } else {
+            // Redirect to the desired URL after pressing Cancel
+            location.replace("http://localhost:5000/#Container");
+        }
+    }
+</script>
+</body>
+</html>

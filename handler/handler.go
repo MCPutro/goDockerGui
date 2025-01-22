@@ -102,7 +102,7 @@ func (h *HandleImpl) LoadData(w http.ResponseWriter, r *http.Request) {
 			Status:      c.Status,
 			Created:     time.Unix(c.Created, 0).Format("02/01/2006 15:04:05"),
 			Port:        portDetails,
-			Name:        c.Names[0],
+			Name:        strings.TrimPrefix(c.Names[0], "/"),
 			State:       c.State,
 		}
 
@@ -124,13 +124,15 @@ func (h *HandleImpl) StopContainer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.DockerClient.ContainerStop(r.Context(), containerId, container.StopOptions{})
-	//if err != nil {
-	//	fmt.Fprintf(w, "Error stopping container: %v", err)
-	//} else {
-	//	fmt.Fprintf(w, "Container %s stopped successfully!", containerId)
-	//}
-	http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+	err := h.DockerClient.ContainerStop(r.Context(), containerId, container.StopOptions{})
+	if err != nil {
+		//fmt.Fprintf(w, "Error stopping container: %v", err)
+		h.template.ExecuteTemplate(w, "notif.html", fmt.Sprintf("Error stopping container: %v", err))
+	} else {
+		//fmt.Fprintf(w, "Container %s stopped successfully!", containerId)
+		h.template.ExecuteTemplate(w, "notif.html", fmt.Sprintf("Container %s stopped successfully!", containerId))
+	}
+	//http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 }
 
 func (h *HandleImpl) StartContainer(w http.ResponseWriter, r *http.Request) {
@@ -140,13 +142,15 @@ func (h *HandleImpl) StartContainer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.DockerClient.ContainerStart(r.Context(), containerId, container.StartOptions{})
-	//if err != nil {
-	//	fmt.Fprintf(w, "Error starting container: %v", err)
-	//} else {
-	//	fmt.Fprintf(w, "Container %s started successfully!", containerId)
-	//}
-	http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+	err := h.DockerClient.ContainerStart(r.Context(), containerId, container.StartOptions{})
+	if err != nil {
+		//fmt.Fprintf(w, "Error starting container: %v", err)
+		h.template.ExecuteTemplate(w, "notif.html", fmt.Sprintf("Error starting container: %v", err))
+	} else {
+		//fmt.Fprintf(w, "Container %s started successfully!", containerId)
+		h.template.ExecuteTemplate(w, "notif.html", fmt.Sprintf("Container %s started successfully!", containerId))
+	}
+	//http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 }
 
 func (h *HandleImpl) Ping(w http.ResponseWriter, r *http.Request) {

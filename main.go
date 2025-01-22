@@ -30,7 +30,7 @@ func main() {
 	mux.HandleFunc("GET /container/start/{containerId}", handleImpl.StartContainer)
 
 	// Start the server
-	port := ":9999"
+	port := ":5000"
 	server := &http.Server{
 		Addr:    port,
 		Handler: mux,
