@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -45,6 +46,7 @@ func NewHandleImpl(dockerClient *client.Client, template *template.Template) Han
 }
 
 func (h *HandleImpl) LoadData(w http.ResponseWriter, r *http.Request) {
+	h.modelDocker.Pid = os.Getpid()
 	h.modelDocker.Images = nil
 	h.modelDocker.Containers = nil
 
