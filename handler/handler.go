@@ -71,7 +71,7 @@ func (h *HandleImpl) LoadData(w http.ResponseWriter, r *http.Request) {
 			RepositoryID: split[0],
 			Tag:          split[1],
 			ImageID:      strings.TrimPrefix(img.ID, "sha256:")[:12],
-			Created:      time.Unix(img.Created, 0).Format("02/01/2006 15:04:05"),
+			Created:      time.Unix(img.Created, 0).Format("02 Jan 2006 15:04:05"),
 			Size:         fmt.Sprintf("%.2f MB ", float64(img.Size)/(1024*1024)),
 		}
 
@@ -89,20 +89,22 @@ func (h *HandleImpl) LoadData(w http.ResponseWriter, r *http.Request) {
 		var portDetails string
 		i := len(ports)
 		if i > 0 {
-			var tmp []string
-			for _, port := range ports {
-				tmp = append(tmp, fmt.Sprintf("%s:%d -> %d", port.IP, port.PrivatePort, port.PublicPort))
-			}
-			portDetails = strings.Join(tmp, ", ")
+			//var tmp []string
+			//for _, port := range ports {
+			//	tmp = append(tmp, fmt.Sprintf("%s:%d -> %d", port.IP, port.PrivatePort, port.PublicPort))
+			//}
+			//portDetails = strings.Join(tmp, ", ")
+			port := ports[0]
+			portDetails = fmt.Sprintf("%d : %d", port.PublicPort, port.PrivatePort)
 		} else {
-			portDetails = "No ports mapped"
+			portDetails = ""
 		}
 
 		dockerContainer := model.DockerContainer{
 			ContainerID: c.ID[:12],
 			Image:       c.Image,
 			Status:      c.Status,
-			Created:     time.Unix(c.Created, 0).Format("02/01/2006 15:04:05"),
+			Created:     time.Unix(c.Created, 0).Format("02 Jan 2006 15:04:05"),
 			Port:        portDetails,
 			Name:        strings.TrimPrefix(c.Names[0], "/"),
 			State:       c.State,
