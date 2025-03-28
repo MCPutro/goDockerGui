@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inspect</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div id="Environments">
+        <div class="h5 fw-bold">Environments</div>
+        <table class="table table-hover">
+            <tbody>
+            {{range $key, $value := .Environment}}
+            <tr>
+                <td class="w-25">{{$key}}</td>
+                <td class="w-auto">{{$value}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="Ports">
+        <div class="h5 fw-bold">Ports</div>
+        <table class="table table-hover">
+            <tbody>
+            {{range $key, $value := .Ports}}
+            <tr>
+                <td class="w-25">{{$key}}</td>
+                <td class="w-auto">{{$value}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="Mounts">
+        <div class="h5 fw-bold">Mounts</div>
+        <table class="table table-hover">
+            <tbody>
+            {{range $key, $value := .Mounts}}
+            <tr>
+                <td class="w-25">{{$key}}</td>
+                <td class="w-auto">{{$value}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

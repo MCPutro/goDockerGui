@@ -16,11 +16,12 @@ type DockerImage struct {
 }
 
 type DockerContainer struct {
-	ContainerID string
-	Image       string
-	Status      string
-	Created     string
-	Port        string
-	Name        string
-	State       string
+	ContainerID     string
+	ContainerIDShow string
+	Image           string
+	Status          string
+	Created         string
+	Port            string
+	Name            string
+	State           string
 }

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Go Docker Gui</title>
+    <link rel="icon" href="/static/icon/logo_512.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="/static/css/custom/custom.css">
+    <link rel="stylesheet" href="/static/css/custom/loading.css">
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <!--    <div class="loading-spinner"></div>-->
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+</div>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="/static/icon/docker_icon_130955.png" alt="Logo" width="30" height="30"
+                 class="d-inline-block align-text-top">
+            <span class="fw-bold">Docker</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/image">Image</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/container">Container</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Volume</a>
+                </li>
+            </ul>
+        </div>
+
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container-fluid ">
+    <div class="fw-bold my-3">PID : {{.Pid}}</div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 50px">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Container ID</th>
+            <th scope="col">Image</th>
+            <th scope="col">Port(s)</th>
+            <th scope="col">Last Started</th>
+<!--            <th scope="col">Created</th>-->
+            <th scope="col"></th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {{range $indexC, $cntrs := .Containers}}
+        <tr>
+            <td class="align-middle">
+                {{if eq $cntrs.State "running"}}
+                <div class="circle active"></div>
+                {{else}}
+                <div class="circle"></div>
+                {{end}}
+            </td>
+            <td class="align-middle"><a href="#" >{{$cntrs.Name}}</a></td>
+            <td class="align-middle">{{$cntrs.ContainerIDShow}}</td>
+            <td class="align-middle">{{$cntrs.Image}}</td>
+            <td class="align-middle">{{$cntrs.Port}}</td>
+            <td class="align-middle">{{$cntrs.Status}}</td>
+<!--            <td class="align-middle">{{$cntrs.Created}}</td>-->
+            <td>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group me-2" role="group" aria-label="First group">
+                        {{if eq $cntrs.State "running"}}
+                        <button type="button"
+                                class="btn btn-secondary d-inline-flex align-items-center justify-content-center"
+                                data-bs-id="{{$cntrs.ContainerID}}"
+                                data-bs-action="stop"
+                                data-bs-method="GET"
+                                onclick="process(this)">
+                            <span class="icon-stop"></span>
+                        </button>
+                        {{else}}
+                        <button type="button"
+                                class="btn btn-primary d-inline-flex align-items-center justify-content-center"
+                                data-bs-id="{{$cntrs.ContainerID}}"
+                                data-bs-action="start"
+                                data-bs-method="GET"
+                                onclick="process(this)">
+                            <span class="icon-play"></span>
+                        </button>
+                        {{end}}
+
+                    </div>
+                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                        <div class="dropdown">
+                            <button class="btn btn-light d-inline-flex align-items-center justify-content-center"
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="icon-more_vert"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                       data-bs-container="{{$cntrs.ContainerID}}"
+                                       data-bs-container-name="{{$cntrs.Name}}"
+                                       data-bs-method="GET"
+                                       onclick="openLogs(this)"
+                                    >Log</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                       data-bs-id="{{$cntrs.ContainerID}}" data-bs-container-name="{{$cntrs.Name}}"
+                                       data-bs-method="GET"
+                                       onclick="inspect(this)"
+                                    >Inspect</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Third group">
+                        <button type="button"
+                                class="btn btn-danger d-inline-flex align-items-center justify-content-center"
+                                data-bs-id="{{$cntrs.ContainerID}}"
+                                data-bs-action="delete"
+                                data-bs-method="DELETE"
+                                onclick="process(this)">
+                            <span class="icon-trash"></span>
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+
+<!--Modal logs-->
+<div class="modal fade" tabindex="-1" id="modals">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/bootstrap.bundle.js"></script>
+<script src="/static/js/bootstrap.esm.js"></script>
+
+<script src="/static/js/custom/sweetalert.min.js"></script>
+<script src="/static/js/custom/jquery-3.7.1.min.js"></script>
+<script>
+    function process(button) {
+        showLoading(true);
+        const id = button.getAttribute("data-bs-id");
+        const action = button.getAttribute("data-bs-action");
+        const method = button.getAttribute("data-bs-method");
+        const url = '/container/' + action + "/" + id;
+        $.ajax({
+            url: `${window.location.origin}/${url}`,
+            type: method,
+            success: function (response) {
+                // alert(response);
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                const errorMessage = "" + xhr.responseText;
+                showLoading(false);
+                alert(errorMessage);
+            }
+        });
+
+        // showLoading(false);
+    }
+</script>
+<script>
+    function showLoading(isShow) {
+        if (isShow) {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        } else {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    }
+
+    function openLogs(a) {
+        const containerId = a.getAttribute("data-bs-container");
+        const containerName = a.getAttribute("data-bs-container-name");
+        const url = "/container/log/" + containerId
+
+        $.get(`${window.location.origin}/${url}`, function (data) {
+            $("#modalTitle").text("Log " + containerName);
+            $("#modalContent").html(data);
+            $("#modals").modal("show");
+        });
+    }
+
+    function inspect(data) {
+        const containerId = data.getAttribute("data-bs-id");
+        const containerName = data.getAttribute("data-bs-container-name");
+        const url = "/container/inspect/" + containerId
+
+        $.get(`${window.location.origin}/${url}`, function (data) {
+            $("#modalTitle").text(containerName);
+            $("#modalContent").html(data);
+            $("#modals").modal("show");
+        });
+    }
+</script>
+
+</body>
+</html>
