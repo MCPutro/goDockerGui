@@ -4,17 +4,21 @@ import (
 	"docker-ui/handler"
 	"embed"
 	"github.com/docker/docker/client"
+	//"github.com/gofiber/fiber/v2"
+	//"github.com/gofiber/fiber/v2/middleware/filesystem"
+	//goHtml "github.com/gofiber/template/html/v2"
 	"html/template"
 	"log"
 	"net/http"
 )
 
 //go:embed template/*.html
+//go:embed template/fragment/*
 var templates2 embed.FS
 
 func main() {
 
-	var myTemplates = template.Must(template.ParseFS(templates2, "template/*.html"))
+	var myTemplates = template.Must(template.ParseFS(templates2, "template/*.html", "template/fragment/*.html"))
 	// Membuat koneksi ke Docker daemon
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
@@ -45,3 +49,22 @@ func main() {
 	log.Println("Listening... http://localhost" + port)
 	server.ListenAndServe() // Run the http server
 }
+
+//func main2() {
+//	engine := goHtml.NewFileSystem(http.FS(templates2), ".html")
+//
+//	app := fiber.New(fiber.Config{Views: engine})
+//	//app := fiber.New()
+//	app.Use("/static/", filesystem.New(filesystem.Config{
+//		Root: http.Dir("./template/static"),
+//	}))
+//
+//	app.Get("/fiber1", func(c *fiber.Ctx) error {
+//		return c.Render("template/container", fiber.Map{})
+//	})
+//
+//	err := app.Listen(":3000")
+//	if err != nil {
+//		panic(err)
+//	}
+//}

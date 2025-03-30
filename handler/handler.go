@@ -107,15 +107,13 @@ func (h *HandleImpl) Container(w http.ResponseWriter, r *http.Request) {
 	for _, c := range containers {
 		ports := c.Ports
 		var portDetails string
-		i := len(ports)
-		if i > 0 {
+		if len(ports) > 0 {
 			//var tmp []string
 			//for _, port := range ports {
 			//	tmp = append(tmp, fmt.Sprintf("%s:%d -> %d", port.IP, port.PrivatePort, port.PublicPort))
 			//}
 			//portDetails = strings.Join(tmp, ", ")
-			port := ports[0]
-			portDetails = fmt.Sprintf("%d : %d", port.PublicPort, port.PrivatePort)
+			portDetails = fmt.Sprintf("%d : %d", ports[0].PublicPort, ports[0].PrivatePort)
 		} else {
 			portDetails = ""
 		}

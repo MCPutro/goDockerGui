@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Go Docker - Container</title>
+    <link rel="icon" href="static/icon/logo_512.ico" type="image/x-icon">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/fonts/icomoon/style.css">
+    <link rel="stylesheet" href="static/fonts/bi/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="static/css/custom/custom.css">
+    <link rel="stylesheet" href="static/css/custom/loading.css">
+
+</head>
+<body>
+
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+
+    <div class="spinner-border text-info" style="width: 3rem; height: 3rem;"></div>
+</div>
+
+<main>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/image">
+                <img src="static/icon/docker_icon_130955.png" alt="Bootstrap" width="30" height="30">
+                <span class="fw-bold">Docker</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <a href="/image" class="nav-item nav-link">Image</a>
+                    <a href="/container" class="nav-item nav-link active">Container</a>
+                    <a href="#" class="nav-item nav-link">Volume</a>
+                </div>
+                <div class="d-flex col-lg-4" role="search">
+                    <input class="form-control me-2" id="search" type="search" placeholder="Search" aria-label="Search" oninput="filter()">
+                    <button class="btn btn-outline-light">Clear</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container-fluid fw-bold my-2">PID : 19548</section>
+    <section class="container-fluid table-responsive">
+        <table class="table table-hover text-nowrap" id="myTable">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 2%">#</th>
+                <th scope="col">Name</th>
+                <th scope="col" style="width: 150px">Container ID</th>
+                <th scope="col" style="width: 350px">Image</th>
+                <th scope="col" style="min-width: 150px;">Port(s)</th>
+                <th scope="col" style="width: 350px">Last Started</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="align-middle">
+                <td><div class="circle"></div></td>
+                <td>sharp_keller</td>
+                <td>89236b3b1897</td>
+                <td>hello-world</td>
+                <td></td>
+                <td>Exited (0) 3 seconds ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+                        <button class="btn btn-outline-primary btn-circle mx-1"
+                                data-bs-id="89236b3b189746c6f0b670b8802367bdf67369353a6505797260a859172aba35"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="89236b3b189746c6f0b670b8802367bdf67369353a6505797260a859172aba35"
+                                       data-bs-container-name="sharp_keller" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="89236b3b189746c6f0b670b8802367bdf67369353a6505797260a859172aba35"
+                                       data-bs-container-name="sharp_keller" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-outline-danger btn-circle mx-1"
+                                data-bs-id="89236b3b189746c6f0b670b8802367bdf67369353a6505797260a859172aba35"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>elastic_noyce</td>
+                <td>aad4bd09b780</td>
+                <td>hello-world</td>
+                <td></td>
+                <td>Exited (0) 4 seconds ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-outline-secondary btn-circle mx-1"
+                                data-bs-action="stop"
+                                data-bs-method="GET"
+                                onclick="process(this)">
+                            <i class="bi bi-stop-fill"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="aad4bd09b780512bde73c6a2d671dd4b07c112489b1956c74d642df22e0bf25c"
+                                       data-bs-container-name="elastic_noyce" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="aad4bd09b780512bde73c6a2d671dd4b07c112489b1956c74d642df22e0bf25c"
+                                       data-bs-container-name="elastic_noyce" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="aad4bd09b780512bde73c6a2d671dd4b07c112489b1956c74d642df22e0bf25c"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>adoring_franklin</td>
+                <td>b5c3599be411</td>
+                <td>hello-world</td>
+                <td></td>
+                <td>Exited (0) 5 seconds ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-primary btn-circle mx-1"
+                                data-bs-id="b5c3599be41118481ed500323e024d1ef0dae6228d2d08b1681d3ff6bf60a7d4"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="fas fa-play"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="b5c3599be41118481ed500323e024d1ef0dae6228d2d08b1681d3ff6bf60a7d4"
+                                       data-bs-container-name="adoring_franklin" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="b5c3599be41118481ed500323e024d1ef0dae6228d2d08b1681d3ff6bf60a7d4"
+                                       data-bs-container-name="adoring_franklin" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="b5c3599be41118481ed500323e024d1ef0dae6228d2d08b1681d3ff6bf60a7d4"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>recursing_antonelli</td>
+                <td>a9c12fea0876</td>
+                <td>hello-world</td>
+                <td></td>
+                <td>Exited (0) 7 seconds ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-primary btn-circle mx-1"
+                                data-bs-id="a9c12fea087630edbff611c3a50f1db3139eac9f581daa7ae69af3d163fa4b9f"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="fas fa-play"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="a9c12fea087630edbff611c3a50f1db3139eac9f581daa7ae69af3d163fa4b9f"
+                                       data-bs-container-name="recursing_antonelli" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="a9c12fea087630edbff611c3a50f1db3139eac9f581daa7ae69af3d163fa4b9f"
+                                       data-bs-container-name="recursing_antonelli" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="a9c12fea087630edbff611c3a50f1db3139eac9f581daa7ae69af3d163fa4b9f"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>postgres_docker</td>
+                <td>27fb14055507</td>
+                <td>postgres:13.6</td>
+                <td></td>
+                <td>Exited (137) 19 minutes ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-primary btn-circle mx-1"
+                                data-bs-id="27fb140555073bac20f4dc243bdea04801e84f583e027891e867992dff2c39fb"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="fas fa-play"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="27fb140555073bac20f4dc243bdea04801e84f583e027891e867992dff2c39fb"
+                                       data-bs-container-name="postgres_docker" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="27fb140555073bac20f4dc243bdea04801e84f583e027891e867992dff2c39fb"
+                                       data-bs-container-name="postgres_docker" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="27fb140555073bac20f4dc243bdea04801e84f583e027891e867992dff2c39fb"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>mysql_docker</td>
+                <td>07bea57c880b</td>
+                <td>mysql:8.4.3</td>
+                <td></td>
+                <td>Exited (137) 32 minutes ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-primary btn-circle mx-1"
+                                data-bs-id="07bea57c880b34d8e6087e73c37ae94df3b496b7b080c89dfdd46f728d35efc9"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="fas fa-play"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="07bea57c880b34d8e6087e73c37ae94df3b496b7b080c89dfdd46f728d35efc9"
+                                       data-bs-container-name="mysql_docker" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="07bea57c880b34d8e6087e73c37ae94df3b496b7b080c89dfdd46f728d35efc9"
+                                       data-bs-container-name="mysql_docker" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="07bea57c880b34d8e6087e73c37ae94df3b496b7b080c89dfdd46f728d35efc9"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>redis_with_auth</td>
+                <td>1d42d0b5f368</td>
+                <td>redis:latest</td>
+                <td></td>
+                <td>Exited (137) 2 days ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-primary btn-circle mx-1"
+                                data-bs-id="1d42d0b5f36841ad0f7ce1ef5e33fb0eeb249ed4f858e786f3e1e911932020e6"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="fas fa-play"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="1d42d0b5f36841ad0f7ce1ef5e33fb0eeb249ed4f858e786f3e1e911932020e6"
+                                       data-bs-container-name="redis_with_auth" data-bs-method="GET"
+                                       onclick="openLogs(this)">Log</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="1d42d0b5f36841ad0f7ce1ef5e33fb0eeb249ed4f858e786f3e1e911932020e6"
+                                       data-bs-container-name="redis_with_auth" data-bs-method="GET"
+                                       onclick="inspect(this)">Inspect</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="1d42d0b5f36841ad0f7ce1ef5e33fb0eeb249ed4f858e786f3e1e911932020e6"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="align-middle">
+                <td>
+
+                    <div class="circle"></div>
+
+                </td>
+                <td>mssql19</td>
+                <td>e4c6b2130ee9</td>
+                <td>mcr.microsoft.com/mssql/server:2019-latest</td>
+                <td></td>
+                <td>Exited (137) 56 minutes ago</td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex">
+
+                        <button class="btn btn-primary btn-circle mx-1"
+                                data-bs-id="e4c6b2130ee9ab2084c038fcd2a36c32720466649c2aab0d60ce7e487e2ecf35"
+                                data-bs-action="start" data-bs-method="GET" onclick="process(this)">
+                            <i class="fas fa-play"></i>
+                        </button>
+
+                        <div class="dropdown-center">
+                            <button class="btn btn-light btn-circle mx-2" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="icon-more_vert"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-container="e4c6b2130ee9ab2084c038fcd2a36c32720466649c2aab0d60ce7e487e2ecf35"
+                                       data-bs-container-name="mssql19" data-bs-method="GET" onclick="openLogs(this)">Log</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                       data-bs-id="e4c6b2130ee9ab2084c038fcd2a36c32720466649c2aab0d60ce7e487e2ecf35"
+                                       data-bs-container-name="mssql19" data-bs-method="GET" onclick="inspect(this)">Inspect</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="border rounded border-secondary mx-3 opacity-25"></div>
+                        <button class="btn btn-danger btn-circle mx-1"
+                                data-bs-id="e4c6b2130ee9ab2084c038fcd2a36c32720466649c2aab0d60ce7e487e2ecf35"
+                                data-bs-action="delete" data-bs-method="DELETE" onclick="cek()">
+                            <i class="icon icon-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </section>
+</main>
+
+
+<div class="modal fade" tabindex="-1" id="modals">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-alert py-5 fade" tabindex="-1" role="dialog" id="modalChoice">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-body p-4 text-center">
+                <h5 class="mb-0">Delete container?</h5>
+                <p class="mb-0">Are you sure you want to delete container <strong id="modalsConfirmContainerName">[container
+                    name]</strong> ?</p>
+            </div>
+            <div class="modal-footer flex-nowrap p-0">
+                <button type="button"
+                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end"
+                        data-bs-dismiss="modal">No, Cancel
+                </button>
+                <button type="button"
+                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 text-danger">Yes,
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="static/js/custom/jquery-3.7.1.min.js"></script>
+<script src="static/js/bootstrap.bundle.min.js"></script>
+<script>
+    function process(button) {
+        showLoading(true);
+        const id = button.getAttribute("data-bs-id");
+        const action = button.getAttribute("data-bs-action");
+        const method = button.getAttribute("data-bs-method");
+        const url = '/container/' + action + "/" + id;
+        $.ajax({
+            url: `${window.location.origin}/${url}`,
+            type: method,
+            success: function (response) {
+
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                const errorMessage = "" + xhr.responseText;
+                showLoading(false);
+                alert(errorMessage);
+            }
+        });
+
+
+    }
+
+    function showLoading(isShow) {
+        if (isShow) {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        } else {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    }
+
+    function openLogs(a) {
+        const containerId = a.getAttribute("data-bs-container");
+        const containerName = a.getAttribute("data-bs-container-name");
+        const url = "/container/log/" + containerId
+
+        $.get(`${window.location.origin}/${url}`, function (data) {
+            $("#modalTitle").text("Log " + containerName);
+            $("#modalContent").html(data);
+            $("#modals").modal("show");
+        });
+    }
+
+    function inspect(data) {
+        const containerId = data.getAttribute("data-bs-id");
+        const containerName = data.getAttribute("data-bs-container-name");
+        const url = "/container/inspect/" + containerId
+
+        $.get(`${window.location.origin}/${url}`, function (data) {
+            $("#modalTitle").text(containerName);
+            $("#modalContent").html(data);
+            $("#modals").modal("show");
+        });
+    }
+
+    function cek() {
+        $("#modalChoice").modal("show");
+    }
+</script>
+<script>
+    const searchBox = document.getElementById('search');
+    const table = document.getElementById("myTable");
+    const trs = table.tBodies[0].getElementsByTagName("tr");
+
+    function filter() {
+        const filter = searchBox.value.toUpperCase();
+        if(filter !== " "){
+            for (let rowI = 0; rowI < trs.length; rowI++) {
+                // define the row's cells
+                const tds = trs[rowI].getElementsByTagName("td");
+                // hide the row
+                trs[rowI].style.display = "none";
+                // loop through row cells
+                for (let cellI = 1; cellI < tds.length-1; cellI++) {
+                    // if there's a match
+                    if (tds[cellI].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        // show the row
+                        trs[rowI].style.display = "";
+                        // skip to the next row
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

@@ -13,3 +13,17 @@
 .circle.active {
     background-color: #007bff;
 }
+
+.btn-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px; /* Adjust size */
+    height: 35px; /* Adjust size */
+    border-radius: 50%;
+    padding: 0;
+}
+
+.btn-circle i {
+    font-size: 20px;
+}
