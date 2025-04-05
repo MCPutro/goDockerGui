@@ -95,7 +95,7 @@
                         <button class="btn btn-outline-secondary btn-circle mx-1"
                                 data-bs-id="{{$cntrs.ContainerID}}"
                                 data-bs-action="stop"
-                                data-bs-method="GET"
+                                data-bs-method="PUT"
                                 onclick="process(this)">
                             <i class="bi bi-stop-fill"></i>
                         </button>
@@ -103,7 +103,7 @@
                         <button class="btn btn-outline-primary btn-circle mx-1"
                                 data-bs-id="{{$cntrs.ContainerID}}"
                                 data-bs-action="start"
-                                data-bs-method="GET"
+                                data-bs-method="PUT"
                                 onclick="process(this)">
                             <i class="bi bi-play-fill"></i>
                         </button>
@@ -173,7 +173,7 @@
         const method = button.getAttribute("data-bs-method");
         const url = '/container/' + action + "/" + id;
         $.ajax({
-            url: `${window.location.origin}/${url}`,
+            url: `${url}`,
             type: method,
             success: function (response) {
                 // alert(response);
@@ -192,7 +192,7 @@
     function openLogs(a) {
         const containerId = a.getAttribute("data-bs-container");
         const containerName = a.getAttribute("data-bs-container-name");
-        const url = "/container/log/" + containerId
+        const url = "container/log/" + containerId
 
         $.get(`${window.location.origin}/${url}`, function (data) {
             $("#modalTitle").text("Log " + containerName);
@@ -204,7 +204,7 @@
     function inspect(data) {
         const containerId = data.getAttribute("data-bs-id");
         const containerName = data.getAttribute("data-bs-container-name");
-        const url = "/container/inspect/" + containerId
+        const url = "container/inspect/" + containerId
 
         $.get(`${window.location.origin}/${url}`, function (data) {
             $("#modalTitle").text(containerName);
@@ -263,7 +263,7 @@
             } else {
                 showDeleteContainerCollection(false);
             }
-            console.log(">>>>", activeRow);
+            // console.log(">>>>", activeRow);
         }
 
     function checklistContainers(source){
@@ -293,7 +293,7 @@
     function deleteContainerCollection(){
         showLoading(true);
 
-        let listContainer = [];
+        let containerIds = [];
 
         // mengambil hanya yang di centang
         const checkboxes = document.querySelectorAll('input[name="checkbox-container"]:checked');
@@ -302,13 +302,15 @@
 
         // get container id dan convert ke list
         checkboxes.forEach(function(checkbox) {
-            listContainer.push(checkbox.getAttribute("data-bs-id"));
+            containerIds.push(checkbox.getAttribute("data-bs-id"));
         });
 
+        const url = "container/batch-delete";
+        console.log(JSON.stringify({  containerIds } ));
         $.ajax({
-            url: '/container/collection/delete',
+            url: `${window.location.origin}/${url}`,
             type: 'POST',
-            data: JSON.stringify({  listContainer } ) ,
+            data: JSON.stringify({  containerIds } ) ,
             contentType: 'application/json',
             success: function(response) {
                 // Handle success response

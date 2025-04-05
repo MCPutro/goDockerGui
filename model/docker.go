@@ -1,11 +1,11 @@
 package model
 
-type Docker struct {
-	Pid        int
-	Version    string
-	Images     []*DockerImage
-	Containers []*DockerContainer
-}
+//type Docker struct {
+//	Pid        int
+//	Version    string
+//	Images     []*DockerImage
+//	Containers []*DockerContainer
+//}
 
 type DockerImage struct {
 	RepositoryID string
