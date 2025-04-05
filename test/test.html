@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check All Checkbox dengan Hapus</title>
+    <script>
+        // Fungsi untuk Check All berdasarkan atribut name
+        function toggleCheckboxes(source) {
+            var checkboxes = document.querySelectorAll('input[name="checkbox"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = source.checked; // Mengubah status checkbox sesuai dengan status checkbox utama
+            });
+            updateCheckAll(); // Update status checkbox utama
+            updateDeleteButton(); // Perbarui tombol Hapus
+        }
+
+        // Fungsi untuk memeriksa status checkbox utama
+        function updateCheckAll() {
+            var checkboxes = document.querySelectorAll('input[name="checkbox"]');
+            var checkAll = document.querySelector('input[name="checkAll"]');
+            var allChecked = true;
+
+            // Cek jika semua checkbox tercentang
+            checkboxes.forEach(function(checkbox) {
+                if (!checkbox.checked) {
+                    allChecked = false; // Jika ada yang belum dicentang
+                }
+            });
+
+            // Update status checkbox utama
+            checkAll.checked = allChecked;
+            checkAll.indeterminate = !allChecked && Array.from(checkboxes).some(checkbox => checkbox.checked); // Set status indeterminate jika ada yang dicentang tapi tidak semua
+        }
+
+        // Fungsi untuk memeriksa jika ada checkbox yang dicentang
+        function updateDeleteButton() {
+            var checkboxes = document.querySelectorAll('input[name="checkbox"]');
+            var deleteButton = document.getElementById('deleteButton');
+            var anyChecked = false;
+
+            // Cek jika ada checkbox yang dicentang
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    anyChecked = true;
+                }
+            });
+
+            // Aktifkan atau nonaktifkan tombol Hapus
+            deleteButton.disabled = !anyChecked;
+        }
+
+        // Fungsi untuk menghapus yang dicentang (contoh saja, bisa disesuaikan)
+        function deleteSelected() {
+            var checkboxes = document.querySelectorAll('input[name="checkbox"]:checked');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.parentElement.parentElement.remove(); // Menghapus baris yang dicentang
+            });
+            updateCheckAll(); // Perbarui status checkbox utama
+            updateDeleteButton(); // Perbarui tombol Hapus
+        }
+    </script>
+</head>
+<body>
+
+    <h2>Contoh Tabel dengan Check All dan Tombol Hapus</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th><input type="checkbox" name="checkAll" onclick="toggleCheckboxes(this)"> Check All</th>
+                <th>Nama</th>
+                <th>Usia</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="checkbox" name="checkbox" onclick="updateCheckAll(); updateDeleteButton();"></td>
+                <td>Andi</td>
+                <td>25</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="checkbox" onclick="updateCheckAll(); updateDeleteButton();"></td>
+                <td>Budi</td>
+                <td>30</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="checkbox" onclick="updateCheckAll(); updateDeleteButton();"></td>
+                <td>Citra</td>
+                <td>28</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Tombol Hapus -->
+    <button id="deleteButton" onclick="deleteSelected()" disabled>Hapus</button>
+
+</body>
+</html>

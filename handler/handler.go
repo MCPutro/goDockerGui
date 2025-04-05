@@ -4,10 +4,6 @@ import (
 	"docker-ui/model"
 	"encoding/json"
 	"fmt"
-	"github.com/docker/docker/api/types/container"
-	"github.com/docker/docker/api/types/image"
-	"github.com/docker/docker/client"
-	"github.com/docker/go-connections/nat"
 	"html/template"
 	"io"
 	"log"
@@ -16,6 +12,11 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/image"
+	"github.com/docker/docker/client"
+	"github.com/docker/go-connections/nat"
 )
 
 type Handler interface {
@@ -28,6 +29,7 @@ type Handler interface {
 	Ping(w http.ResponseWriter, r *http.Request)
 	Log(w http.ResponseWriter, r *http.Request)
 	Inspect(w http.ResponseWriter, r *http.Request)
+	DeleteContainerCollection(w http.ResponseWriter, r *http.Request)
 }
 
 type HandleImpl struct {
@@ -309,4 +311,31 @@ func cek(binding []nat.PortBinding) string {
 		}
 	}
 	return strings.Join(temp, ", ")
+}
+
+type Req struct {
+	ListContainer []string
+}
+
+func (h *HandleImpl) DeleteContainerCollection(w http.ResponseWriter, r *http.Request) {
+	var temp Req
+	if err := json.NewDecoder(r.Body).Decode(&temp); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	for _, containerID := range temp.ListContainer {
+		err := h.DockerClient.ContainerRemove(r.Context(), containerID, container.RemoveOptions{RemoveVolumes: true, Force: true})
+
+		if err != nil {
+			log.Printf("Error removing container %s: %v\n", containerID, err)
+		} else {
+			fmt.Printf("Successfully removed container: %s\n", containerID)
+		}
+
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+
 }

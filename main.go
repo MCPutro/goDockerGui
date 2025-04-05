@@ -3,7 +3,9 @@ package main
 import (
 	"docker-ui/handler"
 	"embed"
+
 	"github.com/docker/docker/client"
+
 	//"github.com/gofiber/fiber/v2"
 	//"github.com/gofiber/fiber/v2/middleware/filesystem"
 	//goHtml "github.com/gofiber/template/html/v2"
@@ -39,6 +41,7 @@ func main() {
 	mux.HandleFunc("GET /container", handleImpl.Container)
 	mux.HandleFunc("GET /container/log/{containerId}", handleImpl.Log)
 	mux.HandleFunc("GET /container/inspect/{containerId}", handleImpl.Inspect)
+	mux.HandleFunc("POST /container/collection/delete", handleImpl.DeleteContainerCollection)
 
 	// Start the server
 	port := ":5000"
