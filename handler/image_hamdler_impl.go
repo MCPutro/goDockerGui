@@ -3,6 +3,7 @@ package handler
 import (
 	"docker-ui/model"
 	"docker-ui/utils/constants"
+	"errors"
 	"fmt"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
@@ -61,6 +62,10 @@ func (i *imageHandlerImpl) Pull(c *fiber.Ctx) error {
 	}
 
 	s := body["imageId"]
+
+	if s == "" {
+		return errors.New("cant't pull image")
+	}
 
 	if strings.HasPrefix(s, "docker pull") {
 		s = strings.TrimPrefix(s, "docker pull")

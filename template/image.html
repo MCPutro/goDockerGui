@@ -109,14 +109,14 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Pull Image/h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Pull Image</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <div class="mb-3">
                         <label for="image-pull-name" class="col-form-label">Image <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="image-pull-name">
+                        <input type="text" class="form-control" id="image-pull-name" name="image-pull-name" required>
                     </div>
                 </form>
             </div>
@@ -142,26 +142,34 @@
 
     function pullImage(){
         showLoading(true)
-        const imageId = document.getElementById('image-pull-name').value;
-        const req = {
-            imageId : imageId
-        }
 
-        $.ajax({
-            url: "/image",
-            type: 'POST',
-            data: JSON.stringify(req) ,
-            contentType: 'application/json',
-            success: function(response) {
-                // Handle success response
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                // Handle error
-                showLoading(false);
-                console.error('Terjadi kesalahan:', error);
+        const elementById = document.getElementById('image-pull-name');
+        const imageId = elementById.value;
+
+        if (imageId === ""){
+            alert("tidak boleh kosong")
+            showLoading(false);
+        }else{
+            const req = {
+                imageId : imageId
             }
-        });
+
+            $.ajax({
+                url: "/image",
+                type: 'POST',
+                data: JSON.stringify(req) ,
+                contentType: 'application/json',
+                success: function(response) {
+                    // Handle success response
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    showLoading(false);
+                    console.error('Terjadi kesalahan:', error);
+                }
+            });
+        }
     }
 </script>
 </body>
