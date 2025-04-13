@@ -3,9 +3,7 @@ package main
 import (
 	"docker-ui/handler"
 	"embed"
-
 	"github.com/docker/docker/client"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	goHtml "github.com/gofiber/template/html/v2"
@@ -14,11 +12,16 @@ import (
 	"net/http"
 )
 
-//go:embed template/*
-//go:embed template/fragment/*
+//go:embed template/*.gohtml template/fragment/*
 var templates2 embed.FS
 
+// Embed a directory
+//
+//go:embed template/static/*
+var embedDirStatic embed.FS
+
 func main() {
+	// docker client
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
 		log.Fatal(err)
@@ -27,7 +30,8 @@ func main() {
 	dockerHandler := handler.NewDockerHandler(cli)
 	imageHandler := handler.NewImageHandler(cli)
 
-	engine := goHtml.NewFileSystem(http.FS(templates2), ".html")
+	//fiber web server
+	engine := goHtml.NewFileSystem(http.FS(templates2), ".gohtml")
 	engine.AddFunc(
 		"unescape", func(s string) template.HTML {
 			return template.HTML(s)
@@ -35,10 +39,11 @@ func main() {
 	)
 
 	app := fiber.New(fiber.Config{Views: engine})
-	//app := fiber.New()
 
 	app.Use("/static/", filesystem.New(filesystem.Config{
-		Root: http.Dir("./template/static"),
+		//Root: http.Dir("./template/static"),
+		Root:       http.FS(embedDirStatic),
+		PathPrefix: "template/static",
 	}))
 
 	app.Get("/container", dockerHandler.Show)

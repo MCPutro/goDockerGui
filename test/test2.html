@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container Configuration Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+<div class="container">
+    <h2 class="mb-4">Container Configuration</h2>
+    <form id="configForm">
+        <!-- Container Name -->
+        <div class="mb-3">
+            <label for="imageName" class="form-label">Image Name</label>
+            <input type="text" class="form-control fw-bold" id="imageName" value="12" required readonly>
+        </div>
+
+        <!-- Container Name -->
+        <div class="mb-3">
+            <label for="containerName" class="form-label">Container Name</label>
+            <input type="text" class="form-control" id="containerName" maxlength="15" required>
+        </div>
+
+        <!-- Ports Section -->
+        <div class="mb-4">
+            <h5>Ports Configuration</h5>
+            <div id="portsContainer">
+                <div class="port-entry input-group mb-2">
+                    <input type="number" class="form-control" placeholder="Public Port" min="1" required>
+                    <span class="input-group-text">:</span>
+                    <input type="number" class="form-control" placeholder="Private Port" min="1" required>
+                    <!--                    <button type="button" class="btn btn-danger ms-2" onclick="removePort(this)">Remove</button>-->
+                </div>
+            </div>
+            <!--            <button type="button" class="btn btn-success" onclick="addPort()">Add Port</button>-->
+        </div>
+
+        <!-- Environment Variables Section -->
+        <div class="mb-4">
+            <h5>Environment Variables</h5>
+            <div id="envContainer">
+                <div class="env-entry input-group mb-2">
+                    <input type="text" class="form-control var-name" placeholder="Variable Name" required>
+                    <div class="invalid-feedback">Variable name must be unique</div>
+                    <span class="input-group-text">=</span>
+                    <input type="text" class="form-control" placeholder="Value" required>
+                    <button type="button" class="btn btn-danger ms-2" onclick="removeEnv(this)">Remove</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success" onclick="addEnv()">Add Variable</button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<script>
+    // Port functions
+    function addPort() {
+        const container = document.getElementById('portsContainer');
+        const template = `
+                <div class="port-entry input-group mb-2">
+                    <input type="number" class="form-control" placeholder="Public Port" required>
+                    <span class="input-group-text">:</span>
+                    <input type="number" class="form-control" placeholder="Private Port" required>
+                    <button type="button" class="btn btn-danger ms-2" onclick="removePort(this)">Remove</button>
+                </div>
+            `;
+        container.insertAdjacentHTML('beforeend', template);
+    }
+
+    function removePort(button) {
+        button.closest('.port-entry').remove();
+    }
+
+    // Environment functions
+    function addEnv() {
+        const container = document.getElementById('envContainer');
+        const template = `
+                <div class="env-entry input-group mb-2">
+                    <input type="text" class="form-control var-name" placeholder="Variable Name" required>
+                    <div class="invalid-feedback">Variable name must be unique</div>
+                    <span class="input-group-text">=</span>
+                    <input type="text" class="form-control" placeholder="Value" required>
+                    <button type="button" class="btn btn-danger ms-2" onclick="removeEnv(this)">Remove</button>
+                </div>
+            `;
+        container.insertAdjacentHTML('beforeend', template);
+        checkEnvDuplicates(); // Check after adding new entry
+    }
+
+    function removeEnv(button) {
+        button.closest('.env-entry').remove();
+        checkEnvDuplicates(); // Check after removal
+    }
+
+    function checkEnvDuplicates() {
+        const varInputs = document.querySelectorAll('#envContainer .var-name');
+        const varMap = new Map();
+        let isValid = true;
+
+        // Reset all validation states
+        varInputs.forEach(input => {
+            input.classList.remove('is-invalid');
+            input.nextElementSibling.style.display = 'none';
+        });
+
+        // Check for duplicates
+        varInputs.forEach(input => {
+            const value = input.value.trim();
+            if (!value) return;
+
+            if (varMap.has(value)) {
+                isValid = false;
+                const existingInput = varMap.get(value);
+                existingInput.classList.add('is-invalid');
+                // existingInput.nextElementSibling.style.display = 'block';
+                input.classList.add('is-invalid');
+                // input.nextElementSibling.style.display = 'block';
+            } else {
+                varMap.set(value, input);
+            }
+        });
+
+        return isValid;
+    }
+
+    // Form submission handling
+    document.getElementById('configForm').addEventListener('submit', function (e) {
+        if (!checkEnvDuplicates()) {
+            e.preventDefault();
+            alert('Please fix duplicate environment variables before submitting.');
+        }
+    });
+
+    // Real-time validation for environment variables
+    document.getElementById('envContainer').addEventListener('input', function (e) {
+        if (e.target.classList.contains('var-name')) {
+            checkEnvDuplicates();
+        }
+    });
+</script>
+</body>
+</html>
